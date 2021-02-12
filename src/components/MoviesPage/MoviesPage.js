@@ -22,6 +22,9 @@ class MoviesPage extends Component {
 
     componentDidMount() {
         const { query } = getQueryParams(this.props.location.search)
+        // if(this.props.location.search.trim() === ''){
+        //     toast('Enter some word!')
+        //     return;}
         if(query) {
             this.fetchMovieWithQuery(query)
         }

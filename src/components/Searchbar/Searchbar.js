@@ -15,10 +15,10 @@ handleChange = evt => {
 
 handleSubmit = evt => {
     evt.preventDefault();
-    if(this.state.query.trim() === ''){
-      toast('Enter some word!')
-      return;
-    }
+    // if(this.state.query.trim() === ''){
+    //   toast('Enter some word!')
+    //   return;
+    // }
 
     this.props.onSubmit(this.state.query);
     this.setState({query: ''})

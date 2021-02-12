@@ -21,7 +21,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "gh-pages -d build",
+    "deploy": "netlify deploy -p",
     "predeploy": "npm run build"
   },
   "repository": {
@@ -34,8 +34,8 @@
   "bugs": {
     "url": "https://MykhailoOtmakhov.github.io/goit-react-hw-04-movies"
   },
-  "homepage": "http://MykhailoOtmakhov.github.io/goit-react-hw-04-movies/",
   "devDependencies": {
+    "gh-pages": "^3.1.0",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-nuke-dist": "^1.0.1"
   },
