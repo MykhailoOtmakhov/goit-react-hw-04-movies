@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Searchbar from '../Searchbar/Searchbar';
 import fetchAPI from '../MovieApiService'
 import MovieList from '../MovieList/MovieList'
+import getQueryParams from '../../utils/getQueryParams'
 
 class MoviesPage extends Component {
     state = {
@@ -15,47 +16,47 @@ class MoviesPage extends Component {
         results: []
     }
 
-    // handleQueryChange = evt => {
-    //     this.setState({ query: evt.currentTarget.value.toLowerCase()})
-    // }
+    fetchMovieWithQuery = query => fetchAPI.fetchMovie(query)
+    .then(data => this.setState({results: data.results}))
+    .catch(error => console.log(error))    
 
-    handleFormSubmit = query =>{
-        this.setState({query})
-        console.log(query);
+    componentDidMount() {
+        const { query } = getQueryParams(this.props.location.search)
+        if(query) {
+            this.fetchMovieWithQuery(query)
+        }
     }
 
-    async componentDidMount() {
-        const actQuery = this.state.query;
-        const response = await Axios.get(`https://api.themoviedb.org/3/search/movie?api_key=c380f664e1da9ad09772f37426d65949&language=en-US&query=${actQuery}&page=1&include_adult=false`);
-        console.log(response.data);
-        console.log(actQuery);
+    componentDidUpdate(prevProps, prevState) {
+        const {query :prevQuery} = getQueryParams(prevProps.location.search)
+        const {query :nextQuery} = getQueryParams(this.props.location.search)
 
-        this.setState({query: actQuery, results: response.data.results})
+        if(prevQuery !== nextQuery){
+            this.fetchMovieWithQuery(nextQuery)
+        }
     }
-        
-    // } 
-    // (prevProps, prevState){
-        //     const query = this.props.query;
-    
-        //     fetchAPI.fetchMovie(query)
-        //     .then(results => this.setState({results}))
-        //     .catch(error => this.setState({error}))
-        // }
-    
-            // if(this.state.query.length){
 
-    
+    handleQueryChange = query =>{
+        this.props.history.push({
+            pathname: this.props.location.pathname,
+            search: `query=${query}`
+        })
+    }
 
     render() {
-        const {results, query} = this.state;
-        console.log(this.props.match.url);
+        const {results} = this.state;
         return (
             <div>
-                <Searchbar onSubmit={this.handleFormSubmit} />            
-                <MovieList results={this.state.results}/>
+                <Searchbar onSubmit={this.handleQueryChange} />            
+                <MovieList results={results}/>
             </div>
         )
     }
 }
 
+MoviesPage.propTypes={
+    query: PropTypes.string,
+    movies: PropTypes.array,
+    results: PropTypes.array,
+}
 export default MoviesPage

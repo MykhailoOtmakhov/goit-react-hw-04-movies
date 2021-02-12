@@ -1,22 +1,39 @@
 import './App.css';
+import React, {lazy, Suspense} from 'react'
 import {Route, Switch} from 'react-router-dom';
-import HomePage from './components/HomePage/HomePage'
-import MoviesPage from './components/MoviesPage/MoviesPage'
+// import HomePage from './components/HomePage/HomePage'
+// import MoviesPage from './components/MoviesPage/MoviesPage'
+// import MovieDetailsPage from './components/MovieDetailsPage/MovieDetailsPage'
 import NotFound from './components/NotFound/NotFound'
-import MovieDetailsPage from './components/MovieDetailsPage/MovieDetailsPage'
 import routes from './routes'
 import AppBar from './components/AppBar/AppBar'
+import Loader from "react-loader-spinner";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+
+const HomePageView = lazy(() => import('./components/HomePage/HomePage' /*webpackChunkName: "homepage-view" */))
+const MoviesPageView = lazy(() => import('./components/MoviesPage/MoviesPage' /*webpackChunkName: "movies-page-view" */))
+const MovieDetailsPageView = lazy(() => import('./components/MovieDetailsPage/MovieDetailsPage' /*webpackChunkName: "movie-details-page-view" */))
 
 const App = () => (
-  <div>
+  <>
     <AppBar />
-    <Switch>
-      <Route exact path={routes.homepage} component={HomePage} />
-      <Route path={routes.movieDetailsPage} component={MovieDetailsPage} />
-      <Route path={routes.moviesPage} component={MoviesPage} />
-      <Route component={NotFound}/>  
-    </Switch>
-  </div>
+    <Suspense fallback={
+      <Loader
+        type="Puff"
+        color="#00BFFF"
+        height={100}
+        width={100}
+        timeout={3000}
+      />
+    }>
+      <Switch>
+        <Route exact path={routes.homepage} component={HomePageView} />
+        <Route path={routes.movieDetailsPage} component={MovieDetailsPageView} />
+        <Route path={routes.moviesPage} component={MoviesPageView} />
+        <Route component={NotFound}/>  
+      </Switch>
+    </Suspense>
+  </>
 );
 
 export default App;
